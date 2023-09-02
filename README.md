@@ -1,6 +1,6 @@
 # FlashsCardTerminal
 <p>Flash Card terminal used to study and customize flash cards</p>
-<img src="https://github.com/GerroPogi/FlashsCardTerminal/blob/main/image_2023-09-02_175353094.ico" alt="Image of Volcano Taal to represent my class Section.">
+<img src="https://github.com/GerroPogi/FlashsCardTerminal/blob/main/icon.ico" alt="Image of Volcano Taal to represent my class Section.">
 
 # What you can do in Flash Card terminal:
 <ol>
