@@ -8,7 +8,6 @@
   <li>Edit Flash Cards</li>
   <li>Add more Flash Cards</li>
   <li>Make a subject of Flash Cards</li>
-  <li>
 </ol>
 
 # How to Install
