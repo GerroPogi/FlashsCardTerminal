@@ -1,5 +1,6 @@
 # FlashsCardTerminal
 <p>Flash Card terminal used to study and customize flash cards</p>
+
 # What you can do in Flash Card terminal:
 <ol>
   <li>Attempt Cards</li>
