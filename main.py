@@ -66,11 +66,15 @@ class Study:
             a=json.load(f)
         return a
     def writeFile(self,path,value:dict):
-        a=self.pickFile(path)
-        for i in list(value.items()):
-            a[i[0]]=i[1]
-        with open(path,"w") as f:
-            json.dump(a,f,indent=4)
+        try:
+            a=self.pickFile(path)
+            for i in list(value.items()):
+                a[i[0]]=i[1]
+            with open(path,"w") as f:
+                json.dump(a,f,indent=4)
+        except:
+            with open(path,"w") as f:
+                json.dump(value,f,indent=4)
     def qna(self,test,subject):
         os.system('cls')
         score=0
@@ -157,7 +161,7 @@ class Study:
         while run:
             for i,(question, answer) in enumerate(b):
                 print(f"{i+1}.\nQuestion: {question}\nAnswer: {answer}\n")
-            print("Which of these are you editing?\nPress C to finish")
+            print("Which of these are you editing?\nPress C to finish\n Press N to make a new question")
             time.sleep(1)
             inp=keyboard.read_key()
             if inp.isdigit():
@@ -166,10 +170,12 @@ class Study:
                         run=False
                         question,answer=b[i]
                         self.editing(question,answer,subject,quiz,os.path.join(os.path.dirname(__file__),"subjectsFlashCards",subject,f"{quiz}"))
-            if inp=='c':
+            elif inp=='c':
                 self.main()
+            elif inp=='n':
+                self.addQuestion(subject,os.path.join(os.path.dirname(__file__),"subjectsFlashCards",subject,f"{quiz}"))
             else:
-                print("Number only")
+                print("Press the number of flie or\nPress C to finish\n Press N to make a new question")
             
     def editing(self,question,answer,subject,quiz,path):
         run=True
@@ -242,7 +248,6 @@ class Study:
                     subject=self.subjectsFolder[int(inp)-1]
                     os.system("cls")
                     if inLocal:
-                        print(os.path.exists(os.path.join(os.path.dirname(__file__), filePath)))
                         added=self.add(os.path.join(os.path.dirname(__file__), filePath),subject)
                         if added:
                             print("File is now moved to: "+os.path.join(os.path.dirname(__file__), "subjectsFlashCards",subject,added))
@@ -345,30 +350,35 @@ class Study:
                 print("Fix numbering/input")
                 time.sleep(2)
                 os.system("cls")
-    def makewSubject(self,subject):
+    def makewSubject(self,subject,mode=None):
         os.system("cls")
         questions={}
-        cancel=False
+        cancel=True
         run=True
         print("You have chosen: "+subject)
         while run:
             question=input("What is your question?\nType Done if done, Cancel to cancel\n")
             if len(question)==0:
                 print("You picked nothing, try again.")
-            elif question.lower()=="done":
+                time.sleep(1)
+                cancel=True
+            
+            elif question.lower().strip() == "done":
                 if not questions:
                     print("You didn't get any questions.\nTry again?\nPress Y or N to continue\n")
                     time.sleep(1)
                     yOrN=keyboard.read_key()
                     if yOrN=="y":
                         print("Ok.")
-                        
                         time.sleep(1)
                     else:
                         print("Canceling...")
-                        run=False
+                        self.main()
                         time.sleep(1)
-                cancel=True
+                else:
+                    cancel=True
+                    run=False
+                time.sleep(1)
             elif question.lower()=="cancel":
                 print("Are you sure you want to cancel?\nPress Y or N to continue\n")
                 time.sleep(1)
@@ -385,6 +395,7 @@ class Study:
                 if yOrN=="y":
                     print("Ok.")
                     time.sleep(1)
+                    cancel=False
                 else:
                     print("Canceling...")
                     cancel=True
@@ -401,6 +412,7 @@ class Study:
                     print("Canceling...")
                     cancel=True
                     time.sleep(1)
+            time.sleep(2)
             
             os.system("cls")
             if not cancel:
@@ -411,9 +423,9 @@ class Study:
                     time.sleep(1)
                     if len(question) == 0:
                         print("You picked nothing, try again.")
-                        os.system("cls")
                     else:
                         runx=False
+                    os.system("cls")
                 print("Question: " + question+"\nAnswer: " + answer+"\nAre you sure?\nPress Y or N to continue")
                 time.sleep(1)
                 yOrN=keyboard.read_key()
@@ -425,9 +437,11 @@ class Study:
                     cancel=False
                 os.system("cls")
             cancel=False
+        if not mode==None:
+            return (question, answer)
         print("Congrats on completing your quiz!\nHere is what you've input:")
-        for i in questions:
-            print(f"Question: {i}\nAnswer{questions[i]}\n\n")
+        for i in range(questions):
+            print(f"{i+1}. Question: {questions[i]}\nAnswer: {questions[questions[i]]}\n\n")
         print("Are you sure you want to save?\nPress Y or N to continue\n")
         time.sleep(1)
         yOrN=keyboard.read_key()
@@ -470,5 +484,16 @@ class Study:
             print("Ok, returning home...")
             time.sleep(1)
             self.main()
+    def addQuestion(self, subject,path):
+        
+        
+        os.system("cls")
+        question= self.makewSubject(subject,mode="Get Data")
+        print(question,)
+        qna={question[0]:question[1]}
+        self.writeFile(path,qna)
+        print("Wrote to: ",path)
+        
+            
 if __name__ == "__main__":
     m=Study()
